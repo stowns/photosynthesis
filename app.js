@@ -189,13 +189,6 @@ app.all('/api/*', sendJson);
 // home
 app.get('/', routes.ui.home);
 
-// currently logged-in user
-app.get('/me', routes.ui.me.show);
-app.put('/me', routes.ui.me.update);
-
-// user profiles
-app.get('/users/:id', routes.ui.users.show);
-
 // authentication
 if(config.enableGuestLogin) {
   app.post('/auth/guest', routes.ui.auth.guest);
