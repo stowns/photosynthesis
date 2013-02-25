@@ -20,6 +20,8 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
       var _this = this;
       $( function() {
         _this.dispatcher = _.extend({}, Backbone.Events);
+        
+        // should try and move this later
         _this.signInView = new App.Views.SignInModal();
         _this.signInView.render();
 
@@ -41,8 +43,13 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
     // user init
     //////////
     setSignedIn: function() {
+      var _this = this;
+
       $('#currentUser').text(this.user.get('name'));
       $('body').removeClass('noUser').addClass('hasUser');
+      $('#me-link').click(function(e) {
+        _this.router.navigate("me", {trigger: true});
+      });
     },
 
     setSignedOut: function() {

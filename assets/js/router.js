@@ -18,7 +18,7 @@
       console.log('/me');
       _this = this;
 
-      this.meView = new App.Views.MeView();
+      this.meView = new App.Views.MeView({ model : App.user });
       this.meView.render();
 
       if (App.user == false) return false;
