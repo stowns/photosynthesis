@@ -31,9 +31,10 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
           _this.logout();
         });
 
+        App.router = new App.Routers.Router();
+        
         _this.setupCurrentUser( function (status) {
-          App.user = status;
-          _this.router = new App.Routers.Router();
+          App.user = status;    
         });
 
       });
@@ -48,13 +49,15 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
       $('#currentUser').text(this.user.get('name'));
       $('body').removeClass('noUser').addClass('hasUser');
       $('#me-link').click(function(e) {
-        _this.router.navigate("me", {trigger: true});
+        e.preventDefault();
+        App.router.navigate("me", {trigger: true});
       });
     },
 
     setSignedOut: function() {
       this.user.clear();
       $('body').removeClass('hasUser').addClass('noUser');
+      App.router.navigate("", {trigger : true});
     },
 
     setupCurrentUser: function(cb) {

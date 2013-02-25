@@ -22,23 +22,6 @@
       this.meView.render();
 
       if (App.user == false) return false;
-        
-      if (App.user.get('email') == 'jamie@yourhappybelly.com') {
-        // init models/views
-        this.mealCreateForm = new App.Views.MealCreateForm();
-        this.mealCreateForm.render();
-        this.mealsWidget = new App.Views.MealsWidget();
-        this.mealsWidget.render();
-        
-        // render views
-        $("#meal-ingredient-tags").tagHandler({
-            getURL: '/api/ingredients',
-            autocomplete: true,
-            placeHolder: 'addingredient'
-        });
-      } else {
-        console.log(App.user.get('email'));
-      }
     },
 
     contact: function() {
@@ -83,6 +66,8 @@
 
     index: function() {
       console.log('/');
+      this.homeView = new App.Views.HomeView();
+      this.homeView.render();
     }, 
 
     activate: function(page) {
