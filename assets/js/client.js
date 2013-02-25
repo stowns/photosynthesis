@@ -20,6 +20,9 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
       var _this = this;
       $( function() {
         _this.dispatcher = _.extend({}, Backbone.Events);
+        _this.signInView = new App.Views.SignInModal();
+        _this.signInView.render();
+
 
         $('#logoutButton').on('click', function(e) {
           e.preventDefault();

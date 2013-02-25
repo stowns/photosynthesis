@@ -67,7 +67,6 @@
     template: null,
 
     render: function () {
-      //var viewParams = this.model.toJSON();
       this.$el.html(jade.templates[this.template + '.jade']());
 
       this.delegateEvents();
