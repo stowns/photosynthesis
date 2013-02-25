@@ -1,10 +1,13 @@
-//= require jquery
-//= require jquery.validate
+//= require jqueryManifest
 //= require bootstrapManifest
 //= require underscore
+//= require underscore.string.min
 //= require backbone
 //= require baseClasses
 //= require_tree ./models
+//= require_tree ./views
+//= require_tree ./collections
+//= require router
 
 // bootstrap hack to stop dropdowns from disappearing on mobile
 $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
@@ -15,23 +18,25 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
 
     init: function() {
       var _this = this;
+      $( function() {
+        _this.dispatcher = _.extend({}, Backbone.Events);
 
-      $(function() {
-        _this.docReady();
+        $('#logoutButton').on('click', function(e) {
+          e.preventDefault();
+          _this.logout();
+        });
+
+        _this.setupCurrentUser( function (status) {
+          App.user = status;
+          _this.router = new App.Routers.Router();
+        });
+
       });
     },
 
-    docReady: function() {
-      var _this = this;
-
-      this.setupCurrentUser();
-
-      $('#logoutButton').on('click', function(e) {
-        e.preventDefault();
-        _this.logout();
-      });
-    },
-
+    //////////
+    // user init
+    //////////
     setSignedIn: function() {
       $('#currentUser').text(this.user.get('name'));
       $('body').removeClass('noUser').addClass('hasUser');
@@ -42,7 +47,7 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
       $('body').removeClass('hasUser').addClass('noUser');
     },
 
-    setupCurrentUser: function() {
+    setupCurrentUser: function(cb) {
       var _this = this;
 
       this.user = new App.Models.Me();
@@ -50,12 +55,18 @@ $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropa
         success: function(user) {
           _this[user.id ? 'setSignedIn' : 'setSignedOut']();
           $('body').removeClass('userNotFetched');
+          cb(user);
+        },
+        error: function(error) {
+          cb(false);
         }
       });
     },
 
     authSuccess: function() {
-      this.setupCurrentUser();
+      this.setupCurrentUser(function(status) {
+        console.log('authSuccess: ' + status);
+      });
       $('#signInModal').modal('hide');
     },
 

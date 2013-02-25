@@ -1,5 +1,30 @@
-extends layout
-
-block content
-  h1= title
-  p Let's get coding.
+doctype 5
+html
+  head
+    title= title
+    != css('client')
+  body.userNotFetched
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          a.brand(id='home-link', href='#') Home
+          p.navbar-text.pull-right
+            ul.nav.pull-right
+              li.dropdown.withUser
+                a.dropdown-toggle(href='#', data-toggle='dropdown')
+                  span#currentUser
+                  &nbsp;
+                  b.caret
+                ul.dropdown-menu(role='menu')
+                  li
+                    a(id='me-link', href='#') Profile
+                  li.divider
+                  li
+                    a#logoutButton(href='#') Sign out
+              li.withoutUser
+                a#signInButton(href='#signInModal', data-toggle='modal', data-target='#signInModal') Sign in
+    #main.container-fluid
+      #content
+    include users/signInModal
+    != jadeTemplates()
+    != js('client')

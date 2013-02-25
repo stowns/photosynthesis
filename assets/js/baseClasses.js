@@ -61,6 +61,19 @@
       return this;
     }
   });
+
+  App.Views.BaseModeless = Backbone.View.extend({
+
+    template: null,
+
+    render: function () {
+      //var viewParams = this.model.toJSON();
+      this.$el.html(jade.templates[this.template + '.jade']());
+
+      this.delegateEvents();
+      return this;
+    }
+  });
   
   App.Routers.Base = Backbone.Router.extend({});
 

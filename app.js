@@ -119,7 +119,7 @@ app.configure(function(){
   // It generates a new cache-busting query string for the script tag every time the server starts
   // This should probably only happen every time there's a change to the templates.js file
   var jadeTemplatesPath = '/js/templates.js';
-  app.use(jadeBrowser(jadeTemplatesPath, ['*.jade', '*/*.jade'], { root: __dirname + '/views', minify: true }));
+  app.use(jadeBrowser(jadeTemplatesPath, ['*.jade', '*/*.jade'], { root: __dirname + '/templates', minify: true }));
   var jadeTemplatesCacheBuster = (new Date()).getTime();
   var jadeTemplatesSrc = jadeTemplatesPath + '?' + jadeTemplatesCacheBuster;
   global.jadeTemplates = function() { return '<script src="' + jadeTemplatesSrc + '" type="text/javascript"></script>'; }
