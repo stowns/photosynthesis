@@ -3,147 +3,50 @@
  * Module dependencies.
  */
 
-var config = require('./config')
-  , express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path')
-  , jadeBrowser = require('jade-browser')
-  , socketIo = require('socket.io')
-  , passportSocketIo = require('passport.socketio')
-  , mongoose = require('mongoose')
-  , connectAssets = require('connect-assets')
-  , lessMiddleware = require('less-middleware')
-  , models = require('./models')
-  , User = models.User
-  , passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy
-  , TwitterStrategy = require('passport-twitter').Strategy
-  , FacebookStrategy = require('passport-facebook').Strategy
-  , MongoStore = require('connect-mongo')(express)
-  , sessionStore = new MongoStore({ url: config.mongodb })
-;
+var config = require('./config'),
+  express = require('express'),
+  routes = require('./routes'),
+  http = require('http'),
+  path = require('path'),
+  mongoose = require('mongoose'),
+  models = require('./models'),
+  User = models.User,
+  AppError = models.AppError,
+  MongoStore = require('connect-mongo')(express)
+  sessionStore = new MongoStore({ url: config.mongodb });
 
-// set up passport authentication
-if(config.enableGuestLogin) {
-  passport.use('guest', new LocalStrategy(
-    {
-      usernameField: 'name',
-    },
-    // doesn't actually use password, just records name
-    function(name, password, done) {
-      process.nextTick(function() {
-        User.authGuest(name, done);
-      });
-    }
-  ));
-}
-if(config.enableEmailLogin) {
-  passport.use('email', new LocalStrategy(
-    {
-      usernameField: 'email'
-    },
-    function(email, password, done) {
-      process.nextTick(function() {
-        User.authEmail(email, password, done);
-      });
-    }
-  ));
-}
-if(config.twitter) {
-  passport.use(new TwitterStrategy(
-    config.twitter,
-    function(token, tokenSecret, profile, done) {
-      process.nextTick(function() {
-        User.authTwitter(token, tokenSecret, profile, done);
-      });
-    }
-  ));
-}
-if(config.facebook) {
-  passport.use(new FacebookStrategy(
-    config.facebook,
-    function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function() {
-        User.authFacebook(accessToken, refreshToken, profile, done);
-      });
-    }
-  ));
-}
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
+var app = module.exports = express();
 
-// connect the database
-mongoose.connect(config.mongodb);
-
-// create app, server, and web sockets
-var app = express()
-  , server = http.createServer(app)
-  , io = socketIo.listen(server)
-;
-
-// Make socket.io a little quieter
-io.set('log level', 1);
-// Give socket.io access to the passport user from Express
-io.set('authorization', passportSocketIo.authorize({
-  passport: passport,
-  sessionKey: 'connect.sid',
-  sessionStore: sessionStore,
-  sessionSecret: config.sessionSecret,
-  success: function(data, accept) {
-    accept(null, true);
-  },
-  fail: function(data, accept) { // keeps socket.io from bombing when user isn't logged in
-    accept(null, true);
-  }
-}));
-// Heroku doesn't support WebSockets, so use long-polling for Heroku
-if(config.socketIo && config.socketIo.useLongPolling) {
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10);
-}
+// Configuration
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-
-  // export jade templates to reuse on client side
-  // This includes a kind of terrible cache-buster hack
-  // It generates a new cache-busting query string for the script tag every time the server starts
-  // This should probably only happen every time there's a change to the templates.js file
-  var jadeTemplatesPath = '/js/templates.js';
-  app.use(jadeBrowser(jadeTemplatesPath, ['*.jade', '*/*.jade'], { root: __dirname + '/templates', minify: true }));
-  var jadeTemplatesCacheBuster = (new Date()).getTime();
-  var jadeTemplatesSrc = jadeTemplatesPath + '?' + jadeTemplatesCacheBuster;
-  global.jadeTemplates = function() { return '<script src="' + jadeTemplatesSrc + '" type="text/javascript"></script>'; }
-
-  // use the connect assets middleware for Snockets sugar
-  app.use(connectAssets());
-
-  app.use(express.favicon());
-  app.use(express.logger(config.loggerFormat));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.cookieParser(config.sessionSecret));
-  app.use(express.session({ store: sessionStore }));
-  app.use(passport.initialize());
-  app.use(passport.session());
+  app.use(express.static(__dirname + '/public'));
   app.use(app.router);
-  
-  app.use(lessMiddleware({ src: __dirname + '/public' }));
-  app.use(express.static(path.join(__dirname, 'public')));
-
-  if(config.useErrorHandler) app.use(express.errorHandler());
 });
 
-// API routes
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
+
+// connect the database
+mongoose.connect(config.mongodb);
+
+
+
+/////////
+// ROUTES
+/////////
+
+// API FIRST!
 // Do not call res.send(), res.json(), etc. in API route functions
 // Instead, within each API route, set res.jsonData to the JSON data, then call next()
 // This will allow us to write UI route functions that piggyback on the API functions
@@ -157,7 +60,6 @@ app.configure(function(){
 */
 var sendJson = function(req, res) { res.json(res.jsonData); }
 app.get('/api/me', routes.api.me.show);
-app.get('/api/users/:id', routes.api.users.show);
 
 // this catch-all route will send JSON for every API route that falls through to this point in the chain
 // WARNING: Sometimes they don't fall through to this point in the chain! Example:
@@ -186,29 +88,21 @@ app.all('/api/*', sendJson);
   };
 */
 
-// home
-app.get('/', routes.ui.home);
+app.get('/', routes.ui.app.index);
+app.get('/partials/:name', routes.ui.app.partials);
+// redirect all others to the index (HTML5 history)
+app.get('*', routes.ui.app.index);
 
-// authentication
-if(config.enableGuestLogin) {
-  app.post('/auth/guest', routes.ui.auth.guest);
-}
-if(config.enableEmailLogin) {
-  app.post('/auth/registerEmail', routes.ui.auth.registerEmail);
-  app.post('/auth/email', routes.ui.auth.email);
-}
-if(config.twitter) {
-  app.get('/auth/twitter', routes.ui.auth.twitter);
-  app.get('/auth/twitter/callback', routes.ui.auth.twitterCallback);
-}
-if(config.facebook) {
-  app.get('/auth/facebook', routes.ui.auth.facebook);
-  app.get('/auth/facebook/callback', routes.ui.auth.facebookCallback);
-}
-app.get('/auth/success', routes.ui.auth.success);
-app.get('/auth/failure', routes.ui.auth.failure)
-app.get('/auth/logout', routes.ui.auth.logout);
+// handle errors
+// process.on('uncaughtException', function (exception) {
+//   console.log('AppError: ' + exception);
+//   var error = new AppError();
+//   error.message = exception;
+//   error.save();
+// });
 
-server.listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+// Start server
+
+app.listen(app.get('port'), function(){
+  console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);
 });
