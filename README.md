@@ -3,7 +3,8 @@ express3_boilerplate
 
 # Overview
 Inspired by jwietelmann's boilerplate.  https://github.com/jwietelmann/express3_boilerplate
-Uses AngularJS opposed Backbone.  Does not currently include passport integration.
+- Removed the Passport integration
+- Swapped out Backbone for AngularJS
 
 # Installation
 npm install
