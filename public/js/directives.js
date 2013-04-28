@@ -12,21 +12,11 @@ angular.module('myApp.directives', []).
   directive('dropZone', function() {
     return function(scope, element, attrs) {
       element.dropzone({ 
-          url: "/upload",
+          url: "/placeholder",
           maxFilesize: 100,
-          paramName: "uploadfile",
-          maxThumbnailFilesize: 5
+          paramName: "image",
+          maxThumbnailFilesize: 5,
+          enqueueForUpload : false
       });
     }
   });
-
-angular.module('dropZone', []).directive('dropZone', function() {
-  return function(scope, element, attrs) {
-    element.dropzone({ 
-        url: "/upload",
-        maxFilesize: 100,
-        paramName: "uploadfile",
-        maxThumbnailFilesize: 5
-    });
-  }
-});

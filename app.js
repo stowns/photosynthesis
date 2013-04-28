@@ -60,6 +60,8 @@ mongoose.connect(config.mongodb);
 */
 var sendJson = function(req, res) { res.json(res.jsonData); }
 app.get('/api/me', routes.api.me.show);
+app.post('/api/album/:name', routes.api.album.create);
+app.post('/api/album/:id/image', routes.api.album.addImage);
 
 // this catch-all route will send JSON for every API route that falls through to this point in the chain
 // WARNING: Sometimes they don't fall through to this point in the chain! Example:
@@ -89,6 +91,7 @@ app.all('/api/*', sendJson);
 */
 
 app.get('/', routes.ui.app.index);
+app.get('/:event', routes.ui.app.event);
 app.get('/partials/:name', routes.ui.app.partials);
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.ui.app.index);

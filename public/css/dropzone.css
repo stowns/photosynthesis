@@ -36,7 +36,7 @@
   -o-transition: opacity 0.3s ease-in-out;
   -ms-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") no-repeat 0 -108px;
+  background: url("/images/spritemap.png") no-repeat 0 -108px;
   position: absolute;
   width: 168px;
   height: 157px;
@@ -53,7 +53,7 @@
 }
 .dropzone.browser-not-supported .message {
   position: relative;
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") no-repeat 0 0;
+  background: url("/images/spritemap.png") no-repeat 0 0;
   width: 204px;
   height: 108px;
   top: 0;
@@ -103,7 +103,7 @@
   word-wrap: break-word;
 }
 .dropzone .preview.file-preview .details {
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") no-repeat 8px -265px;
+  background: url("/images/spritemap.png") no-repeat 8px -265px;
 }
 .dropzone .preview.image-preview .details .size {
   display: none;
@@ -154,10 +154,10 @@
   display: none;
 }
 .dropzone .preview .error-mark {
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") no-repeat 0 -365px;
+  background: url("/images/spritemap.png") no-repeat 0 -365px;
 }
 .dropzone .preview .success-mark {
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") no-repeat -42px -365px;
+  background: url("/images/spritemap.png") no-repeat -42px -365px;
 }
 .dropzone .preview .progress {
   position: relative;
@@ -185,7 +185,7 @@
   left: 0;
   width: 0%;
   height: 100%;
-  background: url("http://dl.dropbox.com/u/1559658/dropzone/spritemap.png") repeat-x 0px -407px;
+  background: url("/images/spritemap.png") repeat-x 0px -407px;
 }
 .dropzone .preview .filename {
   font-size: 12px;

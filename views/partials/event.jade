@@ -1,0 +1,5 @@
+div(ng-controller='UploadCtrl')
+  p {{ content }}
+  input(ng-model='name')
+  form(action="#", drop-zone, id="dropzone").dropzone
+  button(ng-click='submit()') submit

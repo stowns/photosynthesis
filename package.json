@@ -7,12 +7,14 @@
     , "jade": ">= 0.0.1"
     , "mongoose" : "*"
     , "mongoose-types": "*"
+    , "mongoose-slug" : "*"
     , "bcrypt": "*"
     , "async": "*"
     , "lodash" : "*" 
     , "winston" : "*"
     , "connect-mongo": "*"
     , "connect-redis": "*"
+    , "imagemagick" : "*"
   }, 
   "engines": {
     "node": "0.8.x",

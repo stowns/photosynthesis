@@ -1,6 +1,6 @@
 exports.loggerFormat = 'dev';
 exports.useErrorHandler = true;
-exports.mongodb = 'mongodb://localhost/boilerplate';
+exports.mongodb = 'mongodb://localhost/photosynthesis';
 exports.sessionSecret = 'your secret here';
 
 exports.enableGuestLogin = true;
