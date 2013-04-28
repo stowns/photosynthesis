@@ -25,7 +25,3 @@ function ContactCtrl($scope) {
   $scope.content = 'this is the contact page'
 }
 ContactCtrl.$inject = ['$scope'];
-
-function SpecialCtrl($scope, $http) {
-}
-SpecialCtrl.$inject = ['$scope', '$http'];
