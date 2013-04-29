@@ -13,6 +13,7 @@ exports = module.exports = new Schema({
   email: { type: Email },
   salt: { type: String },
   hash: { type: String },
-  images: [{ type : Schema.ObjectId, ref: 'Image' }]
-
+  images: [{ type : Schema.ObjectId, ref: 'Image' }],
+  event : { type : Schema.ObjectId, ref: 'Event' }
+  
 });

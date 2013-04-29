@@ -26,17 +26,38 @@ function ContactCtrl($scope) {
 }
 ContactCtrl.$inject = ['$scope'];
 
-function EventCtrl($scope) {
 
+function EventCtrl($scope, $resource, $routeParams) {
+  angular.extend($scope, {
+    center: {
+      lat: 0, // initial map center latitude
+      lng: 0, // initial map center longitude
+    },
+    markers: [], // an array of markers,
+    zoom: 8, // the zoom level
+  });
+
+
+  // get event details
+  var Event = $resource('/api/event/:slug', { slug : '@slug'});
+  Event.get({ slug : $routeParams.slug }, function(e, getResponseHeaders) {
+    $scope.event = e;
+    var imagesWithLocation = new Array();
+    for (var a in e.albums) {
+      imagesWithLocation.push(e.albums[a].imagesWithLocation);
+    }
+    var finals = _.flatten(imagesWithLocation)
+    $scope.markers = finals;
+  });
 }
-EventCtrl.$inject = ['$scope'];
+EventCtrl.$inject = ['$scope', '$resource', '$routeParams'];
 
 function UploadCtrl($scope, $resource) {
   $scope.submit = function() {
     // create a collection, on success add these images
     var Album = $resource('/api/album/:name', { name : '@name' });
 
-    var album = Album.save({ name:$scope.name }, function(a, putResponseHeaders) {
+    var album = Album.save({ name : $scope.name, eventId : $scope.event._id }, function(a, putResponseHeaders) {
         //u => saved user object
         //putResponseHeaders => $http header getter
         console.log(a._id);
@@ -53,3 +74,8 @@ function UploadCtrl($scope, $resource) {
   }
 }
 UploadCtrl.$inject = ['$scope', '$resource'];
+
+function MapCtrl($scope) {
+
+}
+MapCtrl.$inject = ['$scope']

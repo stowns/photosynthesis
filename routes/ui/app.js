@@ -1,4 +1,7 @@
-
+var models = require('../../models'),
+    Event = models.Event,
+    LOG_TAG = 'UI App: ',
+    l = require('winston');
 /*
  * GET home page.
  */
@@ -13,5 +16,13 @@ exports.partials = function (req, res) {
 };
 
 exports.event = function(req, res) {
+  Event.findOne({ slug : req.params.slug }, function(err, doc) {
+    if (err) console.log(err);
+    if (doc == null) {
+      l.info(LOG_TAG + 'redirecting to /');
+      res.redirect('/');
+    }
 
-}
+    res.render('index');
+  });
+};

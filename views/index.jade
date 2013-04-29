@@ -15,8 +15,7 @@ block body
     div.container
       div(ng-view)
       div
-        | Angular seed app: v
-        span(app-version)
+        | &copy; Simon Townsend 2013
   script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
   script(src='js/lib/angular/angular.js')
   script(src='js/lib/angular/angular-resource.min.js')
@@ -27,3 +26,6 @@ block body
   script(src='js/filters.js')
   script(src='js/directives.js')
   script(src='js/ui-bootstrap-0.2.0.min.js')
+  script(src='http://maps.googleapis.com/maps/api/js?sensor=false&language=en')
+  script(src='js/angular-google-maps.js')
+  script(src='js/lodash.compat.min.js')

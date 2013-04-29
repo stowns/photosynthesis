@@ -12,7 +12,7 @@ exports = module.exports = new Schema({
 
   name: { type: String },
   slug: { type: String}
-
+  
 });
 
 exports.plugin(slug('name'));

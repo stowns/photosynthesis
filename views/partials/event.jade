@@ -1,5 +1,9 @@
 div(ng-controller='UploadCtrl')
   p {{ content }}
   input(ng-model='name')
+  input(type='hidden', value='{{ event.slug }}')
+  input(type='hidden', value='{{ event._id }}')
   form(action="#", drop-zone, id="dropzone").dropzone
   button(ng-click='submit()') submit
+div(ng-controller='MapCtrl')
+  google-map(center="center", draggable="true", zoom="zoom", markers="markers", id='google-map')

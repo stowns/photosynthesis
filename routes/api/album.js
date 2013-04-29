@@ -6,7 +6,10 @@ var models = require('../../models'),
 
 
 exports.create = function(req, res, next) {
-  a = new Album({ name : req.params.name });
+  l.info(LOG_TAG + 'create');
+
+  console.log('eventId ' + req.param('eventId'));
+  var a = new Album({ name : req.params.name, event : req.param('eventId') });
   a.save(function(err, doc) {
     if (err) return l.info(LOG_TAG, err.message);
     console.log(doc);
@@ -17,7 +20,7 @@ exports.create = function(req, res, next) {
 
 exports.addImage = function(req, res, next) {
   l.info(LOG_TAG + 'addImage');
-
+  console.log(req.params.id);
   Image.store(req.files.image, function(err, image) {
     if (err) return l.info(LOG_TAG + err.message);
     Album.findOne({ _id : req.params.id }, function(err, album) {
