@@ -1,6 +1,6 @@
 exports.loggerFormat = 'dev';
 exports.useErrorHandler = true;
-exports.mongodb = process.env.MONGOHQ_URL;
+exports.mongodb = process.env.MONGOLAB_URI;
 exports.sessionSecret = 'your secret here';
 
 exports.enableGuestLogin = true;
