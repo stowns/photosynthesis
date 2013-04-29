@@ -11,9 +11,7 @@ var config = require('./config'),
   mongoose = require('mongoose'),
   models = require('./models'),
   User = models.User,
-  AppError = models.AppError,
-  MongoStore = require('connect-mongo')(express)
-  sessionStore = new MongoStore({ url: config.mongodb });
+  AppError = models.AppError;
 
 var app = module.exports = express();
 
