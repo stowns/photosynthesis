@@ -34,20 +34,22 @@ function EventCtrl($scope, $resource, $routeParams) {
       lng: 0, // initial map center longitude
     },
     markers: [], // an array of markers,
-    zoom: 8, // the zoom level
+    zoom: 13, // the zoom level
   });
 
 
   // get event details
   var Event = $resource('/api/event/:slug', { slug : '@slug'});
-  Event.get({ slug : $routeParams.slug }, function(e, getResponseHeaders) {
-    $scope.event = e;
+  Event.get({ slug : $routeParams.slug }, function(event, getResponseHeaders) {
+    $scope.event = event;
     var imagesWithLocation = new Array();
-    for (var a in e.albums) {
-      imagesWithLocation.push(e.albums[a].imagesWithLocation);
+    for (var a in event.albums) {
+      imagesWithLocation.push(event.albums[a].imagesWithLocation);
     }
-    var finals = _.flatten(imagesWithLocation)
-    $scope.markers = finals;
+    var markers = _.flatten(imagesWithLocation);
+
+    $scope.markers = markers;
+    $scope.center = { lat : event.location[1], lng : event.location[0] };
   });
 }
 EventCtrl.$inject = ['$scope', '$resource', '$routeParams'];

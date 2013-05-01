@@ -10,8 +10,9 @@ var Email = Schema.Types.Email;
 
 exports = module.exports = new Schema({
 
-  name: { type: String },
-  slug: { type: String}
+  name        : { type: String },
+  slug        : { type: String},
+  location    : { type : [Number], index: '2d'}
   
 });
 

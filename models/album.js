@@ -9,11 +9,11 @@ var Email = Schema.Types.Email;
 
 exports = module.exports = new Schema({
 
-  name: { type: String },
-  email: { type: Email },
-  salt: { type: String },
-  hash: { type: String },
-  images: [{ type : Schema.ObjectId, ref: 'Image' }],
-  event : { type : Schema.ObjectId, ref: 'Event' }
+  name    : { type: String },
+  email   : { type: Email },
+  salt    : { type: String },
+  hash    : { type: String },
+  images  : [{ type : Schema.ObjectId, ref: 'Image' }],
+  event   : { type : Schema.ObjectId, ref: 'Event' }
   
 });

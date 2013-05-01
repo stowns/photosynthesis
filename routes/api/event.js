@@ -7,7 +7,10 @@ var models = require('../../models'),
 
 
 exports.create = function(req, res, next) {
-  var e = new Event({ name : req.param('name') });
+  var e = new Event({ 
+                      name : req.param('name'),
+                      location  : [req.param('lng'),req.param('lat')]
+                    });
   e.save(function(err, doc) {
     if (err) l.info(LOG_TAG + err.message);
     console.log(doc);
