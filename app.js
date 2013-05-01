@@ -93,6 +93,7 @@ app.all('/api/*', sendJson);
 app.get('/', routes.ui.app.index);
 app.get('/event/:slug', routes.ui.app.event);
 app.get('/partials/:name', routes.ui.app.partials);
+app.get('/image/:id', routes.ui.app.image);
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.ui.app.index);
 

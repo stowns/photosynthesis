@@ -13,7 +13,7 @@ exports = module.exports = new Schema({
   description   : { type : String },
   location      : { type : [Number], index: '2d'}, // [lon, lat]
   file          : { data: Buffer, contentType: String },
-  date          : { type : Date }
+  date          : { type : Date },
 
 }, { toObject: { virtuals: true }, toJSON : { virtuals: true } });
 
@@ -24,6 +24,10 @@ exports.virtual('latitude').get(function() {
 exports.virtual('longitude').get(function() {
   return this.location[0];
 });
+
+exports.virtual('infoWindow').get(function() {
+  return "<img src='/image/" + this.id + "'></img>";
+})
 
 exports.static('store', function(file, cb) {
   var img = new this;
