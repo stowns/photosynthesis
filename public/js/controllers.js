@@ -30,8 +30,8 @@ ContactCtrl.$inject = ['$scope'];
 function EventCtrl($scope, $resource, $routeParams) {
   angular.extend($scope, {
     center: {
-      lat: 0, // initial map center latitude
-      lng: 0, // initial map center longitude
+      latitude: 0, // initial map center latitude
+      longitude: 0, // initial map center longitude
     },
     markers: [], // an array of markers,
     zoom: 13, // the zoom level
@@ -49,7 +49,7 @@ function EventCtrl($scope, $resource, $routeParams) {
     var markers = _.flatten(imagesWithLocation);
 
     $scope.markers = markers;
-    $scope.center = { lat : event.location[1], lng : event.location[0] };
+    $scope.center = { latitude : event.location[1], longitude : event.location[0] };
   });
 }
 EventCtrl.$inject = ['$scope', '$resource', '$routeParams'];
